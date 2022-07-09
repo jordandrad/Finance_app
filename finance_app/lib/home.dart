@@ -35,9 +35,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    
-    Widget buildCard(int index, String cardNumber) => GestureDetector(
-          onLongPress: () {
+    Widget buildCard(
+            int index, String cardNumber, String cardHolder, String expDate) =>
+        GestureDetector(
+          onDoubleTap: () {
             setState(() {
               cardsCount--;
             });
@@ -49,29 +50,67 @@ class _HomeState extends State<Home> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: 15, left: 15, right: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image.asset(
-                        "images/mastercard.png",
-                        height: 40,
-                      ),
-                    ],
+                  padding: EdgeInsets.only(top: 15, right: 180),
+                  child: Image.asset(
+                    "images/mastercard.png",
+                    height: 40,
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(14),
-                  child: 
-                      Text(
-                        cardNumber,
-                        style: TextStyle(
-                            fontFamily: 'kardust',
-                            fontSize: 15,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),                  
-                  ),              
+                  padding: EdgeInsets.only(right: 40, bottom: 15),
+                  child: Text(
+                    cardNumber,
+                    style: TextStyle(
+                        fontFamily: 'kardust',
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: 10,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            "Card Holder",
+                            style: TextStyle(
+                                fontFamily: 'kardust',
+                                fontSize: 8,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            cardHolder,
+                            style: TextStyle(fontSize: 12, color: Colors.black),
+                          )
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            "Exp. Date",
+                            style: TextStyle(
+                                fontFamily: 'kardust',
+                                fontSize: 8,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            expDate,
+                            style: TextStyle(fontSize: 12, color: Colors.black),
+                          )
+                        ],
+                      ),
+                      Image.asset(
+                        "images/chipCard.png",
+                        height: 50,
+                      )
+                    ],
+                  ),
+                )
               ],
             ),
             decoration: BoxDecoration(
@@ -83,6 +122,15 @@ class _HomeState extends State<Home> {
     void saveCard() {
       setState(() {
         cardsCount++;
+      });
+    }
+
+    void clearController() {
+      setState(() {
+        _controllerCardHolder.text = "";
+        _controllerCardNumber.text = "";
+        _controllerCardHolder.text = "";
+        _controllerCardDate.text = "";
       });
     }
 
@@ -204,87 +252,84 @@ class _HomeState extends State<Home> {
                       ),
                       content: SingleChildScrollView(
                         child: Container(
-                        height: 390,
-                        width: 200,
-                        child: Column(
-                          children: [
-                            TextField(                             
-                              keyboardType: TextInputType.text,
-                              controller: _controllerCardHolder,
-                              style: TextStyle(
-                                color: Colors.white
+                          height: 390,
+                          width: 200,
+                          child: Column(
+                            children: [
+                              TextField(
+                                keyboardType: TextInputType.text,
+                                controller: _controllerCardHolder,
+                                style: TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                    labelText: "Card Holder",
+                                    labelStyle: TextStyle(
+                                        fontFamily: 'kardust',
+                                        color: Color.fromARGB(
+                                            255, 112, 109, 109))),
                               ),
-                              decoration: InputDecoration(    
-                              
-                                         
-                                  labelText: "Card Holder",
-                                  labelStyle: TextStyle(
-                                      fontFamily: 'kardust',
-                                      color:
-                                          Color.fromARGB(255, 112, 109, 109))),
-                            ),
-                            TextField(
-                              controller: _controllerCardNumber,
-                              keyboardType: TextInputType.number,
-                              maxLength: 16,
-                              maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                              
-                               style: TextStyle(
-                                color: Colors.white
-                                
+                              TextField(
+                                controller: _controllerCardNumber,
+                                keyboardType: TextInputType.number,
+                                maxLength: 16,
+                                maxLengthEnforcement:
+                                    MaxLengthEnforcement.enforced,
+                                style: TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                    labelText: "Card number",
+                                    labelStyle: TextStyle(
+                                        fontFamily: 'kardust',
+                                        color: Color.fromARGB(
+                                            255, 112, 109, 109))),
                               ),
-                              decoration: InputDecoration(
-                                  labelText: "Card number",
-                                  labelStyle: TextStyle(
-                                      fontFamily: 'kardust',
-                                      color:
-                                          Color.fromARGB(255, 112, 109, 109))),
-                            ),
-                            TextField(
-                              controller: _controllerCardDate,
-                              keyboardType: TextInputType.number,
-                              maxLength: 4,
-                              maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                               style: TextStyle(
-                                color: Colors.white
+                              TextField(
+                                controller: _controllerCardDate,
+                                keyboardType: TextInputType.number,
+                                maxLength: 4,
+                                maxLengthEnforcement:
+                                    MaxLengthEnforcement.enforced,
+                                style: TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                    labelText: "Exp. Date",
+                                    labelStyle: TextStyle(
+                                        fontFamily: 'kardust',
+                                        color: Color.fromARGB(
+                                            255, 112, 109, 109))),
                               ),
-                              decoration: InputDecoration(
-                                  labelText: "Exp. Date",
-                                  labelStyle: TextStyle(
-                                      fontFamily: 'kardust',
-                                      color:
-                                          Color.fromARGB(255, 112, 109, 109))),
-                            ),
-                            TextField(
-                              controller: _controllerCardCode,
-                              keyboardType: TextInputType.number,
-                              maxLength: 3,
-                              maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                               style: TextStyle(
-                                color: Colors.white
+                              TextField(
+                                controller: _controllerCardCode,
+                                keyboardType: TextInputType.number,
+                                maxLength: 3,
+                                maxLengthEnforcement:
+                                    MaxLengthEnforcement.enforced,
+                                style: TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                    labelText: "CVV",
+                                    labelStyle: TextStyle(
+                                        fontFamily: 'kardust',
+                                        color: Color.fromARGB(
+                                            255, 112, 109, 109))),
                               ),
-                              decoration: InputDecoration(
-                                  labelText: "CVV",
-                                  labelStyle: TextStyle(
-                                      fontFamily: 'kardust',
-                                      color:
-                                          Color.fromARGB(255, 112, 109, 109))),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 40, left: 150),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  saveCard();
-                                  buildCard(index, _controllerCardNumber.text);
-                                },
-                                child: Text("Save"),
-                                style: ElevatedButton.styleFrom(
-                                    primary: Color.fromARGB(255, 0, 87, 3)),
-                              ),
-                            )
-                          ],
+                              Padding(
+                                padding: EdgeInsets.only(top: 40, left: 150),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    saveCard();
+                                    buildCard(
+                                        index,
+                                        _controllerCardNumber.text,
+                                        _controllerCardHolder.text,
+                                        _controllerCardDate.text);
+                                    Navigator.pop(context);
+                                   
+                                  },
+                                  child: Text("Save"),
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Color.fromARGB(255, 0, 87, 3)),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
                       ));
                 }),
             child: Padding(
@@ -376,7 +421,11 @@ class _HomeState extends State<Home> {
                               return buildConnect(1);
                             }
                           } else {
-                            return buildCard(index, _controllerCardNumber.text);
+                            return buildCard(
+                                index,
+                                _controllerCardNumber.text,
+                                _controllerCardHolder.text,
+                                _controllerCardDate.text);
                           }
                         }),
                   )),
@@ -426,36 +475,40 @@ class _HomeState extends State<Home> {
                         }),
                   )),
               Padding(
-                padding: EdgeInsets.only(top: 20, right: 10, left: 10),
+                padding: EdgeInsets.only(top: 20, right: 35, left: 35),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      height: 35,
-                      width: 120,
+                      height: 30,
+                      width: 100,
                       child: ElevatedButton(
                         onPressed: () {},
-                        child: Text("New expense"),
+                        child: Text("Expense",
+                        style: TextStyle(
+                          fontSize: 13
+                        ),
+                        ),
                         style: ElevatedButton.styleFrom(
                             primary: Color.fromARGB(255, 255, 17, 0)),
                       ),
                     ),
                     Container(
-                      height: 35,
-                      width: 120,
+                      height: 30,
+                      width: 100,
                       child: ElevatedButton(
                         onPressed: () {},
-                        child: Text("New income"),
+                        child: Text("Income"),
                         style: ElevatedButton.styleFrom(
                             primary: Color.fromARGB(255, 0, 87, 3)),
                       ),
                     ),
                     Container(
-                      height: 35,
-                      width: 120,
+                      height: 30,
+                      width: 100,
                       child: ElevatedButton(
                         onPressed: () {},
-                        child: Text("New Bill"),
+                        child: Text("Bill"),
                         style: ElevatedButton.styleFrom(
                             primary: Color.fromARGB(255, 0, 38, 69)),
                       ),
