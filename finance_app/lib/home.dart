@@ -15,23 +15,51 @@ class _HomeState extends State<Home> {
   TextEditingController _controllerCardNumber = TextEditingController();
   TextEditingController _controllerCardDate = TextEditingController();
   TextEditingController _controllerCardCode = TextEditingController();
-  var spotifyImage = Image.asset("images/spotifyIcon.png");
-  var netflixImage = Image.asset("images/netflixIcon.png");
-  var appleImage = Image.asset("images/appleIcon.png");
+  TextEditingController _controllerbillName = TextEditingController();
+
+  TextEditingController _controllerbillPrice = TextEditingController();
+  TextEditingController _controllerbillDate = TextEditingController();
+  TextEditingController _controllerIncomeDesc = TextEditingController();
+  TextEditingController _controllerIncomeValue = TextEditingController();
+  TextEditingController _controllerIncomeDate = TextEditingController();
+  TextEditingController _controllerMonthProfit = TextEditingController();
+  TextEditingController _controllerExpenseDesc = TextEditingController();
+  TextEditingController _controllerExpenseValue = TextEditingController();
+  TextEditingController _controllerExpenseDate = TextEditingController();
+
+  List<String> cardHolder = [];
+  List<String> cardNumber = [];
+  List<String> cardDate = [];
+  List<String> cardCode = [];
+  List<String> billTitle = [];
+  List<String> billPrice = [];
+  List<String> billDate = [];
+  List<String> incomeDesc = [];
+  List<String> incomeValue = [];
+  List<String> incomeDate = [];
+  List<String> expenseDesc = [];
+  List<String> expenseValue = [];
+  List<String> expenseDate = [];
+
+  var defaultImage = Image.asset('images/billImage.png');
+
   int cardsCount = 2;
-  int billsCount = 4;
+  int billsCount = 1;
+  int saved = 0;
+  int addBill = 0;
+  int addIncome = 0;
+  int incomeCount = 0;
+  int addExpense = 0;
+  int expenseCount = 0;
   var darkGreen = Color(0xff31a46f);
   var lightGreen = Color(0xffddee4a);
-  final white = Colors.white;
+  var colorButtonSave = Color.fromARGB(255, 0, 87, 3);
   var colorBillDefault = Colors.grey;
+  var goalProfit = 0;
+  var cost = 3597;
+  double currentProfit = 0;
 
-  var _totalSpend = "1760.58";
-  double _progress = 0.8;
-  bool usersChoice = true;
-  int geneerateRandom() {
-    int random = Random().nextInt(9999) + 1000;
-    return random;
-  }
+  double _progress = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +69,7 @@ class _HomeState extends State<Home> {
           onDoubleTap: () {
             setState(() {
               cardsCount--;
+              saved--;
             });
           },
           child: Container(
@@ -119,119 +148,185 @@ class _HomeState extends State<Home> {
             ),
           ),
         );
+    void saveIncome() {
+      setState(() {
+        incomeCount++;
+        addIncome++;
+      });
+    }
+
+    void saveExpense() {
+      setState(() {
+        expenseCount++;
+        addExpense++;
+      });
+    }
+
+    void addGoal() {
+      setState(() {
+        goalProfit = int.parse(_controllerMonthProfit.text);
+      });
+      _controllerMonthProfit.clear();
+    }
+
+    void saveBill() {
+      setState(() {
+        billsCount++;
+        addBill++;
+      });
+      print("Bills Count: " + billsCount.toString());
+      print("Add Bill: " + addBill.toString());
+    }
+
+    void addNewExpense() {
+      setState(() {
+        currentProfit -= double.parse(expenseValue[addExpense - 1]);
+      });
+    }
+
+    void addNewIncome() {
+      setState(() {
+        currentProfit += double.parse(incomeValue[addIncome - 1]);
+      });
+    }
+
     void saveCard() {
       setState(() {
         cardsCount++;
+        saved++;
       });
+      print("Saved value in saveCard: " + saved.toString());
     }
 
-    void clearController() {
+    void verify() {
+      if (saved > 3) {
+        setState(() {
+          colorButtonSave = Colors.grey;
+        });
+      } else {
+        setState(() {
+          colorButtonSave = Color.fromARGB(255, 0, 87, 3);
+        });
+      }
+    }
+
+    void deleteBill() {
       setState(() {
-        _controllerCardHolder.text = "";
-        _controllerCardNumber.text = "";
-        _controllerCardHolder.text = "";
-        _controllerCardDate.text = "";
+        billsCount--;
+        addBill--;
       });
     }
 
-    Widget buildBill(int index, String title, var image, String price,
-            String cents, String day, String month, String year) =>
-        Container(
-          width: 135,
-          height: 120,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Color(0xff2a2a2a),
-          ),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: 50, top: 20),
-                child: Text(
-                  title,
-                  style: TextStyle(
-                      color: Colors.white, fontSize: 13, fontFamily: 'kardust'),
-                ),
-              ),
-              Padding(
-                  padding: EdgeInsets.only(right: 50, top: 1), child: image),
-              Padding(
-                  padding: EdgeInsets.only(right: 50, top: 10),
-                  child: RichText(
-                      text: TextSpan(
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: 'kardust',
-                              color: Colors.white),
-                          children: [
-                        TextSpan(text: "\$$price."),
-                        TextSpan(
-                            text: cents,
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontFamily: 'kardust',
-                                color: Colors.white))
-                      ]))),
-              Padding(
-                padding: EdgeInsets.only(right: 32, top: 10),
-                child: Text("$day $month $year",
+    void calculateIncome() {
+      var splitProfit = currentProfit / goalProfit;
+      if (goalProfit != 0) {
+        setState(() {
+          _progress = splitProfit;
+        });
+      }
+      print(splitProfit);
+    }
+
+    void calculateExpense() {
+      var splitExpense =
+          double.parse(expenseValue[addExpense - 1]) / goalProfit;
+      if (goalProfit != 0) {
+        setState(() {
+          currentProfit - double.parse(expenseValue[addExpense - 1]);
+          _progress -= splitExpense;
+        });
+      }
+      print(splitExpense);
+    }
+
+    void addToListIncome() {
+      incomeDesc.add(_controllerIncomeDesc.text);
+      _controllerIncomeDesc.clear();
+      incomeValue.add(_controllerIncomeValue.text);
+      _controllerIncomeValue.clear();
+      incomeDate.add(_controllerIncomeDate.text);
+      _controllerIncomeDate.clear();
+    }
+
+    void addToListExpense() {
+      expenseDesc.add(_controllerExpenseDesc.text);
+      _controllerExpenseDesc.clear();
+      expenseValue.add(_controllerExpenseValue.text);
+      _controllerExpenseValue.clear();
+      expenseDate.add(_controllerExpenseDate.text);
+      _controllerExpenseDate.clear();
+    }
+
+    void addToListBill() {
+      billTitle.add(_controllerbillName.text);
+      _controllerbillName.clear();
+      billPrice.add(_controllerbillPrice.text);
+      _controllerbillPrice.clear();
+      billDate.add(_controllerbillDate.text);
+      _controllerbillDate.clear();
+    }
+
+    void addToList() {
+      cardHolder.add(_controllerCardHolder.text);
+      _controllerCardHolder.clear();
+      cardNumber.add(_controllerCardNumber.text);
+      _controllerCardNumber.clear();
+      cardDate.add(_controllerCardDate.text);
+      _controllerCardDate.clear();
+      cardCode.add(_controllerCardCode.text);
+      _controllerCardCode.clear();
+    }
+
+    Widget buildBill(
+            int index, String title, var image, String price, String date) =>
+        GestureDetector(
+          onDoubleTap: deleteBill,
+          child: Container(
+            width: 135,
+            height: 120,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Color(0xff2a2a2a),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(right: 50, top: 20),
+                  child: Text(
+                    title,
                     style: TextStyle(
-                        fontFamily: 'kardust',
-                        fontSize: 10,
-                        color: Color.fromARGB(255, 112, 109, 109))),
-              )
-            ],
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontFamily: 'kardust'),
+                  ),
+                ),
+                Padding(
+                    padding: EdgeInsets.only(right: 50, top: 1), child: image),
+                Padding(
+                    padding: EdgeInsets.only(right: 50, top: 10),
+                    child: RichText(
+                        text: TextSpan(
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: 'kardust',
+                                color: Colors.white),
+                            children: [
+                          TextSpan(text: "\$$price"),
+                        ]))),
+                Padding(
+                  padding: EdgeInsets.only(right: 32, top: 10),
+                  child: Text(date,
+                      style: TextStyle(
+                          fontFamily: 'kardust',
+                          fontSize: 10,
+                          color: Color.fromARGB(255, 112, 109, 109))),
+                )
+              ],
+            ),
           ),
         );
 
-    Widget buildBillWhite(int index, String title, String price) => Container(
-          width: 135,
-          height: 120,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20), color: Colors.white),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: 50, top: 20),
-                child: Text(
-                  title,
-                  style: TextStyle(
-                      color: Colors.grey.shade900,
-                      fontSize: 13,
-                      fontFamily: 'kardust'),
-                ),
-              ),
-              Padding(
-                  padding: EdgeInsets.only(right: 50, top: 1),
-                  child: spotifyImage),
-              Padding(
-                  padding: EdgeInsets.only(right: 45, top: 10),
-                  child: RichText(
-                      text: TextSpan(
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: 'kardust',
-                              color: Colors.black),
-                          children: [
-                        TextSpan(text: "\$12."),
-                        TextSpan(
-                            text: "90",
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontFamily: 'kardust',
-                                color: Colors.black))
-                      ]))),
-              Padding(
-                padding: EdgeInsets.only(right: 32, top: 10),
-                child: Text("13 Jan 2022",
-                    style: TextStyle(
-                        fontFamily: 'kardust',
-                        fontSize: 10,
-                        color: Color.fromARGB(255, 112, 109, 109))),
-              )
-            ],
-          ),
-        );
+    
 
     Widget buildConnect(int index) => Container(
           height: 100,
@@ -241,12 +336,13 @@ class _HomeState extends State<Home> {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                      backgroundColor: Color(0xff2a2a2a),
+                      backgroundColor: Colors.white,
+                      // Color(0xff2a2a2a)
                       titlePadding: EdgeInsets.all(20),
                       title: Text(
                         "Card info",
                         style: TextStyle(
-                            color: lightGreen,
+                            color: Colors.black,
                             fontFamily: 'kardust',
                             fontSize: 15),
                       ),
@@ -259,7 +355,7 @@ class _HomeState extends State<Home> {
                               TextField(
                                 keyboardType: TextInputType.text,
                                 controller: _controllerCardHolder,
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
                                     labelText: "Card Holder",
                                     labelStyle: TextStyle(
@@ -273,7 +369,7 @@ class _HomeState extends State<Home> {
                                 maxLength: 16,
                                 maxLengthEnforcement:
                                     MaxLengthEnforcement.enforced,
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
                                     labelText: "Card number",
                                     labelStyle: TextStyle(
@@ -287,7 +383,7 @@ class _HomeState extends State<Home> {
                                 maxLength: 4,
                                 maxLengthEnforcement:
                                     MaxLengthEnforcement.enforced,
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
                                     labelText: "Exp. Date",
                                     labelStyle: TextStyle(
@@ -301,7 +397,7 @@ class _HomeState extends State<Home> {
                                 maxLength: 3,
                                 maxLengthEnforcement:
                                     MaxLengthEnforcement.enforced,
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
                                     labelText: "CVV",
                                     labelStyle: TextStyle(
@@ -314,17 +410,18 @@ class _HomeState extends State<Home> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     saveCard();
-                                    buildCard(
-                                        index,
-                                        _controllerCardNumber.text,
-                                        _controllerCardHolder.text,
-                                        _controllerCardDate.text);
+                                    addToList();
+                                    verify();
+                                    print(cardHolder);
+                                    print(cardNumber);
+                                    print(cardDate);
+                                    print(cardCode);
+
                                     Navigator.pop(context);
-                                   
                                   },
                                   child: Text("Save"),
                                   style: ElevatedButton.styleFrom(
-                                      primary: Color.fromARGB(255, 0, 87, 3)),
+                                      primary: colorButtonSave),
                                 ),
                               )
                             ],
@@ -372,7 +469,7 @@ class _HomeState extends State<Home> {
               Padding(
                 padding: EdgeInsets.only(top: 30, bottom: 7),
                 child: Text(
-                  "\$$_totalSpend",
+                  "\$$currentProfit",
                   style: TextStyle(
                       color: lightGreen, fontSize: 45, fontFamily: 'kardust'),
                 ),
@@ -380,7 +477,7 @@ class _HomeState extends State<Home> {
               Padding(
                 padding: EdgeInsets.only(bottom: 30),
                 child: Text(
-                  "Total month spend",
+                  "Balance",
                   style: TextStyle(
                     color: Colors.grey,
                   ),
@@ -417,15 +514,31 @@ class _HomeState extends State<Home> {
                             );
                           }
                           if (index == 1) {
-                            {
-                              return buildConnect(1);
-                            }
+                            return buildConnect(1);
+                          }
+                          if (index == 2) {
+                            print("CardHolder returned");
+                            return buildCard(index, cardNumber[0],
+                                cardHolder[0], cardDate[0]);
+                          }
+                          if (index == 3) {
+                            print("CardHolder1 returned");
+                            return buildCard(index, cardNumber[1],
+                                cardHolder[1], cardDate[1]);
+                          }
+                          if (index == 4) {
+                            print("CardHolder2 returned");
+                            return buildCard(index, cardNumber[2],
+                                cardHolder[2], cardDate[2]);
+                          }
+                          if (index == 5) {
+                            print("CardHolder3 returned");
+                            return buildCard(index, cardNumber[3],
+                                cardHolder[3], cardDate[3]);
                           } else {
-                            return buildCard(
-                                index,
-                                _controllerCardNumber.text,
-                                _controllerCardHolder.text,
-                                _controllerCardDate.text);
+                            return SizedBox(
+                              width: 1,
+                            );
                           }
                         }),
                   )),
@@ -455,22 +568,34 @@ class _HomeState extends State<Home> {
                           );
                         },
                         itemBuilder: (context, index) {
+                          print(index);
                           if (index == 0) {
                             return SizedBox(
                               width: 12,
                             );
                           }
                           if (index == 1) {
-                            {
-                              return buildBillWhite(index, "Spotify", "30");
-                            }
+                            return buildBill(
+                                index,
+                                billTitle[index - 1],
+                                defaultImage,
+                                billPrice[index - 1],
+                                billDate[index - 1]);
                           }
                           if (index == 2) {
-                            return buildBill(index, "Netflix", netflixImage,
-                                "7", "50", "2", "Jun", "2022");
+                            return buildBill(
+                                index,
+                                billTitle[index - 1],
+                                defaultImage,
+                                billPrice[index - 1],
+                                billDate[index - 1]);
                           } else {
-                            return buildBill(index, "Apple", appleImage, "19",
-                                "00", "10", "Aug", "2022");
+                            return buildBill(
+                                index,
+                                billTitle[index - 1],
+                                defaultImage,
+                                billPrice[index - 1],
+                                billDate[index - 1]);
                           }
                         }),
                   )),
@@ -483,37 +608,421 @@ class _HomeState extends State<Home> {
                       height: 30,
                       width: 100,
                       child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text("Expense",
-                        style: TextStyle(
-                          fontSize: 13
-                        ),
+                        onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.white,
+                                title: Text(
+                                  "New Expense",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'kardust',
+                                      fontSize: 18),
+                                ),
+                                content: SingleChildScrollView(
+                                    child: Container(
+                                  height: 290,
+                                  width: 200,
+                                  child: Column(
+                                    children: [
+                                      TextField(
+                                        keyboardType: TextInputType.text,
+                                        controller: _controllerExpenseDesc,
+                                        style: TextStyle(color: Colors.black),
+                                        decoration: InputDecoration(
+                                            labelText: "Description",
+                                            labelStyle: TextStyle(
+                                                fontFamily: 'kardust',
+                                                color: Color.fromARGB(
+                                                    255, 112, 109, 109))),
+                                      ),
+                                      TextField(
+                                        keyboardType: TextInputType.number,
+                                        controller: _controllerExpenseValue,
+                                        style: TextStyle(color: Colors.black),
+                                        decoration: InputDecoration(
+                                            labelText: "Expense value",
+                                            labelStyle: TextStyle(
+                                                fontFamily: 'kardust',
+                                                color: Color.fromARGB(
+                                                    255, 112, 109, 109))),
+                                      ),
+                                      TextField(
+                                        keyboardType: TextInputType.text,
+                                        controller: _controllerExpenseDate,
+                                        style: TextStyle(color: Colors.black),
+                                        decoration: InputDecoration(
+                                            labelText: "Date",
+                                            labelStyle: TextStyle(
+                                                fontFamily: 'kardust',
+                                                color: Color.fromARGB(
+                                                    255, 112, 109, 109))),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 40, left: 150),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            saveExpense();
+                                            addToListExpense();
+                                            print(expenseDesc);
+                                            print(expenseValue);
+                                            print(expenseDate);
+                                            addNewExpense();
+                                            calculateExpense();
+                                          },
+                                          child: Text("Add"),
+                                          style: ElevatedButton.styleFrom(
+                                            primary:
+                                                Color.fromARGB(255, 0, 87, 3),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )),
+                              );
+                            }),
+                        child: Text(
+                          "Expense",
+                          style: TextStyle(fontSize: 13),
                         ),
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 255, 17, 0)),
+                          primary: Color.fromARGB(255, 87, 0, 0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                        ),
                       ),
                     ),
                     Container(
                       height: 30,
                       width: 100,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.white,
+                                title: Text(
+                                  "New Income",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'kardust',
+                                      fontSize: 18),
+                                ),
+                                content: SingleChildScrollView(
+                                    child: Container(
+                                  height: 290,
+                                  width: 200,
+                                  child: Column(
+                                    children: [
+                                      TextField(
+                                        keyboardType: TextInputType.text,
+                                        controller: _controllerIncomeDesc,
+                                        style: TextStyle(color: Colors.black),
+                                        decoration: InputDecoration(
+                                            labelText: "Description",
+                                            labelStyle: TextStyle(
+                                                fontFamily: 'kardust',
+                                                color: Color.fromARGB(
+                                                    255, 112, 109, 109))),
+                                      ),
+                                      TextField(
+                                        keyboardType: TextInputType.number,
+                                        controller: _controllerIncomeValue,
+                                        style: TextStyle(color: Colors.black),
+                                        decoration: InputDecoration(
+                                            labelText: "Income value",
+                                            labelStyle: TextStyle(
+                                                fontFamily: 'kardust',
+                                                color: Color.fromARGB(
+                                                    255, 112, 109, 109))),
+                                      ),
+                                      TextField(
+                                        keyboardType: TextInputType.text,
+                                        controller: _controllerIncomeDate,
+                                        style: TextStyle(color: Colors.black),
+                                        decoration: InputDecoration(
+                                            labelText: "Date",
+                                            labelStyle: TextStyle(
+                                                fontFamily: 'kardust',
+                                                color: Color.fromARGB(
+                                                    255, 112, 109, 109))),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 40, left: 150),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            saveIncome();
+                                            addToListIncome();
+                                            addNewIncome();
+                                            calculateIncome();
+                                          },
+                                          child: Text("Add"),
+                                          style: ElevatedButton.styleFrom(
+                                            primary:
+                                                Color.fromARGB(255, 0, 87, 3),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )),
+                              );
+                            }),
                         child: Text("Income"),
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 0, 87, 3)),
+                          primary: Color.fromARGB(255, 0, 87, 3),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                        ),
                       ),
                     ),
                     Container(
                       height: 30,
                       width: 100,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.white,
+                                title: Text(
+                                  "New Bill",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'kardust',
+                                      fontSize: 18),
+                                ),
+                                content: SingleChildScrollView(
+                                    child: Container(
+                                  height: 290,
+                                  width: 200,
+                                  child: Column(
+                                    children: [
+                                      TextField(
+                                        keyboardType: TextInputType.text,
+                                        controller: _controllerbillName,
+                                        style: TextStyle(color: Colors.black),
+                                        decoration: InputDecoration(
+                                            labelText: "Bill name",
+                                            labelStyle: TextStyle(
+                                                fontFamily: 'kardust',
+                                                color: Color.fromARGB(
+                                                    255, 112, 109, 109))),
+                                      ),
+                                      TextField(
+                                        keyboardType: TextInputType.number,
+                                        controller: _controllerbillPrice,
+                                        style: TextStyle(color: Colors.black),
+                                        decoration: InputDecoration(
+                                            labelText: "Price",
+                                            labelStyle: TextStyle(
+                                                fontFamily: 'kardust',
+                                                color: Color.fromARGB(
+                                                    255, 112, 109, 109))),
+                                      ),
+                                      TextField(
+                                        keyboardType: TextInputType.text,
+                                        controller: _controllerbillDate,
+                                        style: TextStyle(color: Colors.black),
+                                        decoration: InputDecoration(
+                                            labelText: "Date",
+                                            labelStyle: TextStyle(
+                                                fontFamily: 'kardust',
+                                                color: Color.fromARGB(
+                                                    255, 112, 109, 109))),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 40, left: 150),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+
+                                            saveBill();
+                                            addToListBill();
+                                          },
+                                          child: Text("Add"),
+                                          style: ElevatedButton.styleFrom(
+                                            primary:
+                                                Color.fromARGB(255, 0, 87, 3),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )),
+                              );
+                            }),
                         child: Text("Bill"),
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 0, 38, 69)),
+                          primary: Color.fromARGB(255, 1, 0, 83),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                        ),
                       ),
                     ),
                   ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Container(
+                  height: 30,
+                  width: 200,
+                  child: ElevatedButton(
+                    onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            backgroundColor: Colors.white,
+                            title: Text(
+                              "Personal info",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'kardust',
+                                  fontSize: 18),
+                            ),
+                            content: SingleChildScrollView(
+                                child: Container(
+                              height: 220,
+                              width: 200,
+                              child: Column(
+                                children: [
+                                  TextField(
+                                    keyboardType: TextInputType.number,
+                                    controller: _controllerMonthProfit,
+                                    style: TextStyle(color: Colors.black),
+                                    decoration: InputDecoration(
+                                        labelText: "Month earnings goal",
+                                        labelStyle: TextStyle(
+                                            fontFamily: 'kardust',
+                                            color: Color.fromARGB(
+                                                255, 112, 109, 109))),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Goal",
+                                          style: TextStyle(
+                                              fontFamily: 'kardust',
+                                              fontSize: 18,
+                                              color: Colors.black),
+                                        ),
+                                        Text(
+                                          "Profits",
+                                          style: TextStyle(
+                                              fontFamily: 'kardust',
+                                              fontSize: 18,
+                                              color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          child: Center(
+                                            child: Text(
+                                              goalProfit.toString(),
+                                              style: TextStyle(
+                                                  fontFamily: 'kardust',
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          height: 30,
+                                          width: 110,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(18.0),
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                        Container(
+                                            child: Center(
+                                              child: Text(
+                                                currentProfit.toString(),
+                                                style: TextStyle(
+                                                    fontFamily: 'kardust',
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            height: 30,
+                                            width: 110,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                              color: Colors.blue,
+                                            ))
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(top: 40, left: 150),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        addGoal();
+                                        calculateIncome();
+                                      },
+                                      child: Text("Save"),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Color.fromARGB(255, 0, 87, 3),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )),
+                          );
+                        }),
+                    child: Text(
+                      "Personal info",
+                      style: TextStyle(fontSize: 13),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 51, 1, 75),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                    ),
+                  ),
                 ),
               )
             ],

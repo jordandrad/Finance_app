@@ -71,6 +71,8 @@ flutter:
      - images/applestoreIcon.png
      - images/appleIcon.png
      - images/chipCard.png
+     - images/billImage.png
+     - images/billPink.png
      
 
   # An image asset can refer to one or more resolution-specific "variants", see
