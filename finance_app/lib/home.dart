@@ -56,7 +56,7 @@ class _HomeState extends State<Home> {
   var colorButtonSave = Color.fromARGB(255, 0, 87, 3);
   var colorBillDefault = Colors.grey;
   var goalProfit = 0;
-  var cost = 3597;
+ 
   double currentProfit = 0;
 
   double _progress = 0.0;
