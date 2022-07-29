@@ -1,6 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:finance_app/card.dart';
+import 'package:finance_app/bill.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -50,103 +51,20 @@ class _HomeState extends State<Home> {
   int incomeCount = 0;
   int addExpense = 0;
   int expenseCount = 0;
-  var darkGreen = Color(0xff31a46f);
-  var lightGreen = Color(0xffddee4a);
-  var colorButtonSave = Color.fromARGB(255, 0, 87, 3);
+  var darkGreen = Color(0xff112A54);
+  var lightGreen = Color(0xff41729F);
+  var colorButtonSave = Color(0xff41729F);
   var colorBillDefault = Colors.grey;
   var goalProfit = 0;
- 
+
   double currentProfit = 0;
 
   double _progress = 0.0;
 
   @override
   Widget build(BuildContext context) {
-    Widget buildCard(
-            int index, String cardNumber, String cardHolder, String expDate) =>
-        GestureDetector(
-          onDoubleTap: () {
-            setState(() {
-              cardsCount--;
-              saved--;
-            });
-          },
-          child: Container(
-            width: 250,
-            height: 100,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 15, right: 180),
-                  child: Image.asset(
-                    "images/mastercard.png",
-                    height: 40,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: 40, bottom: 15),
-                  child: Text(
-                    cardNumber,
-                    style: TextStyle(
-                        fontFamily: 'kardust',
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 10,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            "Card Holder",
-                            style: TextStyle(
-                                fontFamily: 'kardust',
-                                fontSize: 8,
-                                color: Colors.black),
-                          ),
-                          Text(
-                            cardHolder,
-                            style: TextStyle(fontSize: 12, color: Colors.black),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            "Exp. Date",
-                            style: TextStyle(
-                                fontFamily: 'kardust',
-                                fontSize: 8,
-                                color: Colors.black),
-                          ),
-                          Text(
-                            expDate,
-                            style: TextStyle(fontSize: 12, color: Colors.black),
-                          )
-                        ],
-                      ),
-                      Image.asset(
-                        "images/chipCard.png",
-                        height: 50,
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: darkGreen,
-            ),
-          ),
-        );
+    
+   
     void saveIncome() {
       setState(() {
         incomeCount++;
@@ -204,7 +122,7 @@ class _HomeState extends State<Home> {
         });
       } else {
         setState(() {
-          colorButtonSave = Color.fromARGB(255, 0, 87, 3);
+          colorButtonSave = Color(0xff41729F);
         });
       }
     }
@@ -276,56 +194,7 @@ class _HomeState extends State<Home> {
       _controllerCardCode.clear();
     }
 
-    Widget buildBill(
-            int index, String title, var image, String price, String date) =>
-        GestureDetector(
-          onDoubleTap: deleteBill,
-          child: Container(
-            width: 135,
-            height: 120,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Color(0xff2a2a2a),
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(right: 50, top: 20),
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontFamily: 'kardust'),
-                  ),
-                ),
-                Padding(
-                    padding: EdgeInsets.only(right: 50, top: 1), child: image),
-                Padding(
-                    padding: EdgeInsets.only(right: 50, top: 10),
-                    child: RichText(
-                        text: TextSpan(
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: 'kardust',
-                                color: Colors.white),
-                            children: [
-                          TextSpan(text: "\$$price"),
-                        ]))),
-                Padding(
-                  padding: EdgeInsets.only(right: 32, top: 10),
-                  child: Text(date,
-                      style: TextStyle(
-                          fontFamily: 'kardust',
-                          fontSize: 10,
-                          color: Color.fromARGB(255, 112, 109, 109))),
-                )
-              ],
-            ),
-          ),
-        );
-
-    
+   
 
     Widget buildConnect(int index) => Container(
           height: 100,
@@ -335,14 +204,14 @@ class _HomeState extends State<Home> {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                      backgroundColor: Colors.white,
+                      backgroundColor: Color(0xffC3E0E5),
                       // Color(0xff2a2a2a)
                       titlePadding: EdgeInsets.all(20),
                       title: Text(
                         "Card info",
                         style: TextStyle(
                             color: Colors.black,
-                            fontFamily: 'kardust',
+                            fontFamily: 'sfpromedium',
                             fontSize: 15),
                       ),
                       content: SingleChildScrollView(
@@ -358,7 +227,7 @@ class _HomeState extends State<Home> {
                                 decoration: InputDecoration(
                                     labelText: "Card Holder",
                                     labelStyle: TextStyle(
-                                        fontFamily: 'kardust',
+                                        fontFamily: 'sfpromedium',
                                         color: Color.fromARGB(
                                             255, 112, 109, 109))),
                               ),
@@ -372,7 +241,7 @@ class _HomeState extends State<Home> {
                                 decoration: InputDecoration(
                                     labelText: "Card number",
                                     labelStyle: TextStyle(
-                                        fontFamily: 'kardust',
+                                        fontFamily: 'sfpromedium',
                                         color: Color.fromARGB(
                                             255, 112, 109, 109))),
                               ),
@@ -386,7 +255,7 @@ class _HomeState extends State<Home> {
                                 decoration: InputDecoration(
                                     labelText: "Exp. Date",
                                     labelStyle: TextStyle(
-                                        fontFamily: 'kardust',
+                                        fontFamily: 'sfpromedium',
                                         color: Color.fromARGB(
                                             255, 112, 109, 109))),
                               ),
@@ -400,7 +269,7 @@ class _HomeState extends State<Home> {
                                 decoration: InputDecoration(
                                     labelText: "CVV",
                                     labelStyle: TextStyle(
-                                        fontFamily: 'kardust',
+                                        fontFamily: 'sfpromedium',
                                         color: Color.fromARGB(
                                             255, 112, 109, 109))),
                               ),
@@ -444,8 +313,8 @@ class _HomeState extends State<Home> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: darkGreen,
-                                fontFamily: 'kardust',
-                                fontSize: 15),
+                                fontFamily: 'sfpromedium',
+                                fontSize: 17),
                           ),
                         ),
                       ],
@@ -454,13 +323,16 @@ class _HomeState extends State<Home> {
                 ))),
           ),
           decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: darkGreen)),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: darkGreen,
+            ),
+          ),
         );
 
     return Scaffold(
-      backgroundColor: Colors.black26,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -470,7 +342,9 @@ class _HomeState extends State<Home> {
                 child: Text(
                   "\$$currentProfit",
                   style: TextStyle(
-                      color: lightGreen, fontSize: 45, fontFamily: 'kardust'),
+                      color: Color(0xff020B1D),
+                      fontSize: 45,
+                      fontFamily: 'sfpromedium'),
                 ),
               ),
               Padding(
@@ -478,7 +352,7 @@ class _HomeState extends State<Home> {
                 child: Text(
                   "Balance",
                   style: TextStyle(
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
               ),
@@ -488,7 +362,7 @@ class _HomeState extends State<Home> {
                   value: _progress,
                   backgroundColor: Colors.grey,
                   minHeight: 6,
-                  valueColor: AlwaysStoppedAnimation(lightGreen),
+                  valueColor: AlwaysStoppedAnimation(Color(0xff020B1D)),
                 ),
               ),
               Padding(
@@ -517,22 +391,22 @@ class _HomeState extends State<Home> {
                           }
                           if (index == 2) {
                             print("CardHolder returned");
-                            return buildCard(index, cardNumber[0],
+                            return card(index, cardNumber[0],
                                 cardHolder[0], cardDate[0]);
                           }
                           if (index == 3) {
                             print("CardHolder1 returned");
-                            return buildCard(index, cardNumber[1],
+                            return card(index, cardNumber[1],
                                 cardHolder[1], cardDate[1]);
                           }
                           if (index == 4) {
                             print("CardHolder2 returned");
-                            return buildCard(index, cardNumber[2],
+                            return card(index, cardNumber[2],
                                 cardHolder[2], cardDate[2]);
                           }
                           if (index == 5) {
                             print("CardHolder3 returned");
-                            return buildCard(index, cardNumber[3],
+                            return card(index, cardNumber[3],
                                 cardHolder[3], cardDate[3]);
                           } else {
                             return SizedBox(
@@ -548,7 +422,9 @@ class _HomeState extends State<Home> {
                 child: Text(
                   "Upcoming bills",
                   style: TextStyle(
-                      color: Colors.white, fontFamily: 'kardust', fontSize: 22),
+                      color: Colors.black,
+                      fontFamily: 'sfpromedium',
+                      fontSize: 22),
                 ),
               ),
               Padding(
@@ -574,7 +450,7 @@ class _HomeState extends State<Home> {
                             );
                           }
                           if (index == 1) {
-                            return buildBill(
+                            return bill(
                                 index,
                                 billTitle[index - 1],
                                 defaultImage,
@@ -582,14 +458,14 @@ class _HomeState extends State<Home> {
                                 billDate[index - 1]);
                           }
                           if (index == 2) {
-                            return buildBill(
+                            return bill(
                                 index,
                                 billTitle[index - 1],
                                 defaultImage,
                                 billPrice[index - 1],
                                 billDate[index - 1]);
                           } else {
-                            return buildBill(
+                            return bill(
                                 index,
                                 billTitle[index - 1],
                                 defaultImage,
@@ -611,12 +487,13 @@ class _HomeState extends State<Home> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                backgroundColor: Colors.white,
+                                backgroundColor:
+                                    Color.fromARGB(255, 216, 168, 168),
                                 title: Text(
                                   "New Expense",
                                   style: TextStyle(
                                       color: Colors.black,
-                                      fontFamily: 'kardust',
+                                      fontFamily: 'sfpromedium',
                                       fontSize: 18),
                                 ),
                                 content: SingleChildScrollView(
@@ -632,7 +509,7 @@ class _HomeState extends State<Home> {
                                         decoration: InputDecoration(
                                             labelText: "Description",
                                             labelStyle: TextStyle(
-                                                fontFamily: 'kardust',
+                                                fontFamily: 'sfpromedium',
                                                 color: Color.fromARGB(
                                                     255, 112, 109, 109))),
                                       ),
@@ -643,7 +520,7 @@ class _HomeState extends State<Home> {
                                         decoration: InputDecoration(
                                             labelText: "Expense value",
                                             labelStyle: TextStyle(
-                                                fontFamily: 'kardust',
+                                                fontFamily: 'sfpromedium',
                                                 color: Color.fromARGB(
                                                     255, 112, 109, 109))),
                                       ),
@@ -654,7 +531,7 @@ class _HomeState extends State<Home> {
                                         decoration: InputDecoration(
                                             labelText: "Date",
                                             labelStyle: TextStyle(
-                                                fontFamily: 'kardust',
+                                                fontFamily: 'sfpromedium',
                                                 color: Color.fromARGB(
                                                     255, 112, 109, 109))),
                                       ),
@@ -674,8 +551,7 @@ class _HomeState extends State<Home> {
                                           },
                                           child: Text("Add"),
                                           style: ElevatedButton.styleFrom(
-                                            primary:
-                                                Color.fromARGB(255, 0, 87, 3),
+                                            primary: Color(0xff112A54),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(18.0),
@@ -708,12 +584,102 @@ class _HomeState extends State<Home> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                backgroundColor: Colors.white,
+                                backgroundColor: Color(0xffC3E0E5),
+                                title: Text(
+                                  "New Bill",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'sfpromedium',
+                                      fontSize: 18),
+                                ),
+                                content: SingleChildScrollView(
+                                    child: Container(
+                                  height: 290,
+                                  width: 200,
+                                  child: Column(
+                                    children: [
+                                      TextField(
+                                        keyboardType: TextInputType.text,
+                                        controller: _controllerbillName,
+                                        style: TextStyle(color: Colors.black),
+                                        decoration: InputDecoration(
+                                            labelText: "Bill name",
+                                            labelStyle: TextStyle(
+                                                fontFamily: 'sfpromedium',
+                                                color: Color.fromARGB(
+                                                    255, 112, 109, 109))),
+                                      ),
+                                      TextField(
+                                        keyboardType: TextInputType.number,
+                                        controller: _controllerbillPrice,
+                                        style: TextStyle(color: Colors.black),
+                                        decoration: InputDecoration(
+                                            labelText: "Price",
+                                            labelStyle: TextStyle(
+                                                fontFamily: 'sfpromedium',
+                                                color: Color.fromARGB(
+                                                    255, 112, 109, 109))),
+                                      ),
+                                      TextField(
+                                        keyboardType: TextInputType.text,
+                                        controller: _controllerbillDate,
+                                        style: TextStyle(color: Colors.black),
+                                        decoration: InputDecoration(
+                                            labelText: "Date",
+                                            labelStyle: TextStyle(
+                                                fontFamily: 'sfpromedium',
+                                                color: Color.fromARGB(
+                                                    255, 112, 109, 109))),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 40, left: 150),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+
+                                            saveBill();
+                                            addToListBill();
+                                          },
+                                          child: Text("Add"),
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Color(0xff112A54),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )),
+                              );
+                            }),
+                        child: Text("Bill"),
+                        style: ElevatedButton.styleFrom(
+                          primary: darkGreen,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 30,
+                      width: 100,
+                      child: ElevatedButton(
+                        onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor:
+                                    Color.fromARGB(255, 164, 224, 184),
                                 title: Text(
                                   "New Income",
                                   style: TextStyle(
                                       color: Colors.black,
-                                      fontFamily: 'kardust',
+                                      fontFamily: 'sfpromedium',
                                       fontSize: 18),
                                 ),
                                 content: SingleChildScrollView(
@@ -729,7 +695,7 @@ class _HomeState extends State<Home> {
                                         decoration: InputDecoration(
                                             labelText: "Description",
                                             labelStyle: TextStyle(
-                                                fontFamily: 'kardust',
+                                                fontFamily: 'sfpromedium',
                                                 color: Color.fromARGB(
                                                     255, 112, 109, 109))),
                                       ),
@@ -740,7 +706,7 @@ class _HomeState extends State<Home> {
                                         decoration: InputDecoration(
                                             labelText: "Income value",
                                             labelStyle: TextStyle(
-                                                fontFamily: 'kardust',
+                                                fontFamily: 'sfpromedium',
                                                 color: Color.fromARGB(
                                                     255, 112, 109, 109))),
                                       ),
@@ -751,7 +717,7 @@ class _HomeState extends State<Home> {
                                         decoration: InputDecoration(
                                             labelText: "Date",
                                             labelStyle: TextStyle(
-                                                fontFamily: 'kardust',
+                                                fontFamily: 'sfpromedium',
                                                 color: Color.fromARGB(
                                                     255, 112, 109, 109))),
                                       ),
@@ -768,8 +734,7 @@ class _HomeState extends State<Home> {
                                           },
                                           child: Text("Add"),
                                           style: ElevatedButton.styleFrom(
-                                            primary:
-                                                Color.fromARGB(255, 0, 87, 3),
+                                            primary: Color(0xff112A54),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(18.0),
@@ -791,96 +756,6 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     ),
-                    Container(
-                      height: 30,
-                      width: 100,
-                      child: ElevatedButton(
-                        onPressed: () => showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                backgroundColor: Colors.white,
-                                title: Text(
-                                  "New Bill",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'kardust',
-                                      fontSize: 18),
-                                ),
-                                content: SingleChildScrollView(
-                                    child: Container(
-                                  height: 290,
-                                  width: 200,
-                                  child: Column(
-                                    children: [
-                                      TextField(
-                                        keyboardType: TextInputType.text,
-                                        controller: _controllerbillName,
-                                        style: TextStyle(color: Colors.black),
-                                        decoration: InputDecoration(
-                                            labelText: "Bill name",
-                                            labelStyle: TextStyle(
-                                                fontFamily: 'kardust',
-                                                color: Color.fromARGB(
-                                                    255, 112, 109, 109))),
-                                      ),
-                                      TextField(
-                                        keyboardType: TextInputType.number,
-                                        controller: _controllerbillPrice,
-                                        style: TextStyle(color: Colors.black),
-                                        decoration: InputDecoration(
-                                            labelText: "Price",
-                                            labelStyle: TextStyle(
-                                                fontFamily: 'kardust',
-                                                color: Color.fromARGB(
-                                                    255, 112, 109, 109))),
-                                      ),
-                                      TextField(
-                                        keyboardType: TextInputType.text,
-                                        controller: _controllerbillDate,
-                                        style: TextStyle(color: Colors.black),
-                                        decoration: InputDecoration(
-                                            labelText: "Date",
-                                            labelStyle: TextStyle(
-                                                fontFamily: 'kardust',
-                                                color: Color.fromARGB(
-                                                    255, 112, 109, 109))),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 40, left: 150),
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-
-                                            saveBill();
-                                            addToListBill();
-                                          },
-                                          child: Text("Add"),
-                                          style: ElevatedButton.styleFrom(
-                                            primary:
-                                                Color.fromARGB(255, 0, 87, 3),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(18.0),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                )),
-                              );
-                            }),
-                        child: Text("Bill"),
-                        style: ElevatedButton.styleFrom(
-                          primary: Color.fromARGB(255, 1, 0, 83),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -894,12 +769,12 @@ class _HomeState extends State<Home> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
-                            backgroundColor: Colors.white,
+                            backgroundColor: Color(0xffC3E0E5),
                             title: Text(
                               "Personal info",
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontFamily: 'kardust',
+                                  fontFamily: 'sfpromedium',
                                   fontSize: 18),
                             ),
                             content: SingleChildScrollView(
@@ -915,7 +790,7 @@ class _HomeState extends State<Home> {
                                     decoration: InputDecoration(
                                         labelText: "Month earnings goal",
                                         labelStyle: TextStyle(
-                                            fontFamily: 'kardust',
+                                            fontFamily: 'sfpromedium',
                                             color: Color.fromARGB(
                                                 255, 112, 109, 109))),
                                   ),
@@ -928,14 +803,14 @@ class _HomeState extends State<Home> {
                                         Text(
                                           "Goal",
                                           style: TextStyle(
-                                              fontFamily: 'kardust',
+                                              fontFamily: 'sfpromedium',
                                               fontSize: 18,
                                               color: Colors.black),
                                         ),
                                         Text(
                                           "Profits",
                                           style: TextStyle(
-                                              fontFamily: 'kardust',
+                                              fontFamily: 'sfpromedium',
                                               fontSize: 18,
                                               color: Colors.black),
                                         ),
@@ -953,7 +828,7 @@ class _HomeState extends State<Home> {
                                             child: Text(
                                               goalProfit.toString(),
                                               style: TextStyle(
-                                                  fontFamily: 'kardust',
+                                                  fontFamily: 'sfpromedium',
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -961,17 +836,16 @@ class _HomeState extends State<Home> {
                                           height: 30,
                                           width: 110,
                                           decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(18.0),
-                                            color: Colors.green,
-                                          ),
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                              color: darkGreen),
                                         ),
                                         Container(
                                             child: Center(
                                               child: Text(
                                                 currentProfit.toString(),
                                                 style: TextStyle(
-                                                    fontFamily: 'kardust',
+                                                    fontFamily: 'sfpromedium',
                                                     color: Colors.white,
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -982,7 +856,7 @@ class _HomeState extends State<Home> {
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(18.0),
-                                              color: Colors.blue,
+                                              color: darkGreen,
                                             ))
                                       ],
                                     ),
@@ -998,7 +872,7 @@ class _HomeState extends State<Home> {
                                       },
                                       child: Text("Save"),
                                       style: ElevatedButton.styleFrom(
-                                        primary: Color.fromARGB(255, 0, 87, 3),
+                                        primary: Color(0xff41729F),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(18.0),
@@ -1016,7 +890,7 @@ class _HomeState extends State<Home> {
                       style: TextStyle(fontSize: 13),
                     ),
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 51, 1, 75),
+                      primary: darkGreen,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
                       ),
